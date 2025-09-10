@@ -15,6 +15,7 @@ from datetime import (
     timezone,
 )
 from decimal import Decimal
+from enum import Enum
 from fractions import Fraction
 from io import StringIO
 import itertools
@@ -1957,6 +1958,14 @@ class TestIsScalar:
         assert is_scalar(Interval(left=0, right=1))
         assert is_scalar(DateOffset(days=1))
         assert is_scalar(pd.offsets.Minute(3))
+
+    def test_is_scalar_enum(self):
+        class Color(Enum):
+            RED = 1
+            GREEN = 2
+            BLUE = 3
+
+        assert is_scalar(Color.RED)
 
     def test_is_scalar_pandas_containers(self):
         assert not is_scalar(Series(dtype=object))

@@ -175,6 +175,7 @@ def is_scalar(val: object) -> bool:
         - DateOffset
         - Fraction
         - Number.
+        - Enum
 
     Returns
     -------
@@ -190,6 +191,14 @@ def is_scalar(val: object) -> bool:
 
     Examples
     --------
+    >>> from enum import Enum
+    >>> class Color(Enum):
+    ...     RED = 1
+    ...     GREEN = 2
+    ...     BLUE = 3
+    >>> pd.api.types.is_scalar(Color.RED)
+    True
+
     >>> import datetime
     >>> dt = datetime.datetime(2018, 10, 3)
     >>> pd.api.types.is_scalar(dt)
@@ -220,7 +229,8 @@ def is_scalar(val: object) -> bool:
             # We differ from numpy, which claims that None is not scalar;
             # see np.isscalar
             or val is C_NA
-            or val is None):
+            or val is None
+            or isinstance(val, Enum)):
         return True
 
     # Next use C-optimized checks to exclude common non-scalars before falling
